@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betting Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        table {
+            width: 90%;
+            max-width: 600px;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background: #007BFF;
+            color: #fff;
+        }
+    </style>
+    <script>
+        function calculateStake() {
+            const capital = parseFloat(document.getElementById('capital').value);
+            if (!isNaN(capital)) {
+                const stake = (capital * 0.15).toFixed(2);
+                document.getElementById('stake').innerText = 'Your stake amount is: ' + stake + ' Naira';
+            } else {
+                document.getElementById('stake').innerText = '';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Betting Plan</h1>
+    <form method="POST">
+        <label for="capital">Enter the capital:</label>
+        <input type="number" step="0.01" id="capital" name="capital" oninput="calculateStake()" required><br><br>
+        <p id="stake"></p>
+        <label for="odds">Enter the odds:</label>
+        <input type="number" step="0.01" name="odds" required><br><br>
+        <label for="outcome">Enter the outcome of the bet:</label>
+        <select name="outcome" required>
+            <option value="win">Win</option>
+            <option value="lose">Lose</option>
+        </select><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <form method="POST" action="{{ url_for('clear_history') }}">
+        <button type="submit">Clear History</button>
+    </form>
+
+    {% if balance is not none %}
+        <h2>Your total balance is {{ balance }} Naira after the bet</h2>
+    {% endif %}
+    
+    <h3>Bet History:</h3>
+    <table>
+        <tr>
+            <th>Capital</th>
+            <th>Stake</th>
+            <th>Odds</th>
+            <th>Outcome</th>
+            <th>Balance After Bet</th>
+        </tr>
+        {% for bet in bet_history %}
+        <tr>
+            <td>{{ bet.capital }}</td>
+            <td>{{ bet.stake }}</td>
+            <td>{{ bet.odds }}</td>
+            <td>{{ bet.outcome }}</td>
+            <td>{{ bet.balance_after_bet }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
